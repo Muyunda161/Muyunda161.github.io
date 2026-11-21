@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cake Studio case study | Muyunda Nalukui</title>
+<meta name="description" content="Case study: a custom e-commerce site I designed and built for Cake Studio, a Zambian baking supplies store. Next.js, PostgreSQL, Flutterwave payments and an admin dashboard.">
+<link rel="canonical" href="https://muyunda161.github.io/projects/cake-studio/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cake Studio: a custom e-commerce site for a Zambian baking store">
+<meta property="og:description" content="Mobile-first storefront, product variants with stock tracking, MoMo, Airtel Money and card payments, and an admin dashboard.">
+<meta property="og:url" content="https://muyunda161.github.io/projects/cake-studio/">
+<meta property="og:image" content="https://muyunda161.github.io/assets/projects/cake-studio/home.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#09090b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/style.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<div class="spotlight" aria-hidden="true"></div>
+<a class="skip" href="#overview">Skip to content</a>
+
+<header>
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a href="../../index.html" class="brand">Muyunda Nalukui</a>
+      <div class="nav-links" id="navLinks">
+        <a href="../../index.html#work">Work</a>
+        <a href="../../index.html#about">About</a>
+        <a href="../../index.html#skills">Skills</a>
+        <a href="../../index.html#journey">Journey</a>
+        <a href="../../index.html#contact">Contact</a>
+        <a class="btn-cv" href="../../assets/Muyunda-Nalukui-CV.pdf" download>CV ↓</a>
+      </div>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">Menu</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="case-hero">
+      <a class="back" href="../../index.html#work">← All work</a>
+      <h1 class="case-title">Cake Studio</h1>
+      <p class="case-sub">A custom e-commerce website I designed and built for a Zambian baking supplies store.</p>
+      <dl class="meta">
+        <div><dt>Client</dt><dd>Cake Studio (owner: Sabeta Mbola)</dd></div>
+        <div><dt>My role</dt><dd>Sole developer</dd></div>
+        <div><dt>Scope</dt><dd>Design, front end, back end, database, payments, security, deployment</dd></div>
+        <!-- When the site is live, replace the line below with:
+             <div><dt>Live site</dt><dd><a href="https://cakestudio.co.zm" target="_blank" rel="noopener">cakestudio.co.zm ↗</a></dd></div> -->
+        <div><dt>Live site</dt><dd>Coming soon</dd></div>
+      </dl>
+    </div>
+
+    <section class="case-section" id="overview" style="padding-block:60px">
+      <h2>Overview</h2>
+      <div class="prose reveal">
+        <p>Cake Studio is a baking supplies store in Zambia. I built its online shop: customers browse ingredients, baking tools and packaging, choose sizes and colours, pay, and pick courier delivery or free store pickup.</p>
+        <p>The owner, Sabeta Mbola, manages orders, stock, prices and delivery fees from a simple admin dashboard. I was the only developer on the project.</p>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>The problem</h2>
+      <div class="prose reveal">
+        <p>The store sells many items, and most come in different sizes and colours. It needed customers to browse, choose and pay online.</p>
+        <p>Most of its traffic comes from WhatsApp, Facebook and Instagram, so the site had to work well on a phone first.</p>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>What I built</h2>
+      <div class="prose reveal">
+        <ul class="plain">
+          <li>A mobile-first storefront for ingredients, baking tools and packaging.</li>
+          <li>Product variants (sizes, colours) with automatic stock tracking that prevents overselling.</li>
+          <li>A cart and guest checkout, so customers don't need an account.</li>
+          <li>Payment by MTN MoMo, Airtel Money or card, through Flutterwave.</li>
+          <li>Courier delivery with fees set by delivery zone, or free store pickup.</li>
+          <li>Order tracking and order confirmation emails.</li>
+          <li>WhatsApp order support.</li>
+          <li>An admin dashboard for orders, stock, prices and delivery fees, with low-stock alerts.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>Technical decisions</h2>
+      <div class="prose reveal">
+        <h3>The server calculates every price</h3>
+        <p>The browser sends product IDs, variants and quantities. The server looks up prices and delivery fees and works out the total itself. I never take a price from the browser, so editing a request can't change what an order costs.</p>
+        <h3>Stock is protected with database transactions</h3>
+        <p>Checking stock and reducing it happen inside a single database transaction. If two customers try to buy the last item at the same moment, only one order can take it.</p>
+        <h3>Payments are verified before an order counts as paid</h3>
+        <p>An order is marked as paid when the Flutterwave webhook is verified, not when the customer lands back on the site. Webhook handling is idempotent: if the same event arrives twice, the order is processed once.</p>
+        <h3>Docker setup</h3>
+        <p>I packaged the app with Docker so it runs the same way in development and on the server. I used Cloudflare Tunnel to expose it to the internet.</p>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>Security</h2>
+      <div class="prose reveal">
+        <p>Payments and customer orders need to be handled carefully, so I treated security as part of the build.</p>
+        <ul class="plain">
+          <li>Prices calculated on the server.</li>
+          <li>Verified and idempotent payment webhooks.</li>
+          <li>Rate limiting.</li>
+          <li>Strict security headers.</li>
+          <li>Hashed admin passwords.</li>
+          <li>Validated inputs.</li>
+          <li>No source maps in production.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>Result</h2>
+      <div class="prose reveal">
+        <p>Delivered and handed over to the client. The store owner can manage orders, stock, prices and delivery fees from the admin dashboard.</p>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>Tech stack</h2>
+      <div class="reveal">
+        <ul class="tags" style="margin-top:0">
+          <li>Next.js</li><li>TypeScript</li><li>Tailwind CSS</li><li>PostgreSQL</li><li>Prisma</li><li>NextAuth</li><li>Zod</li><li>Flutterwave</li><li>Cloudinary</li><li>Resend</li><li>Docker</li><li>Cloudflare Tunnel</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>Screenshots</h2>
+      <div class="gallery reveal">
+        <figure>
+          <img data-shot src="../../assets/projects/cake-studio/home.png" width="1600" height="1000" loading="lazy" decoding="async" alt="Cake Studio home page showing featured baking supplies">
+          <figcaption>Home page</figcaption>
+        </figure>
+        <figure>
+          <img data-shot src="../../assets/projects/cake-studio/product.png" width="1600" height="1000" loading="lazy" decoding="async" alt="Cake Studio product page with size and colour options">
+          <figcaption>Product page with variants</figcaption>
+        </figure>
+        <figure>
+          <img data-shot src="../../assets/projects/cake-studio/checkout.png" width="1600" height="1000" loading="lazy" decoding="async" alt="Cake Studio checkout with delivery and payment options">
+          <figcaption>Checkout</figcaption>
+        </figure>
+        <figure>
+          <img data-shot src="../../assets/projects/cake-studio/admin.png" width="1600" height="1000" loading="lazy" decoding="async" alt="Cake Studio admin dashboard showing orders and stock">
+          <figcaption>Admin dashboard</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <div class="next">
+      <p class="mono" style="margin-bottom:10px">Next project</p>
+      <a href="../zedstack/">ZedStack →</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> Muyunda Nalukui · Lusaka, Zambia</div>
+</footer>
+<script src="../../assets/main.js" defer></script>
+</body>
+</html>

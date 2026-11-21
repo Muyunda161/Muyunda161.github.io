@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZedStack case study | Muyunda Nalukui</title>
+<meta name="description" content="Case study: ZedStack, a multi-tenant point of sale, inventory and reporting platform for small businesses in Zambia. In active development. React, FastAPI, PostgreSQL.">
+<link rel="canonical" href="https://muyunda161.github.io/projects/zedstack/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZedStack: a multi-tenant business platform for Zambian SMEs">
+<meta property="og:description" content="Point of sale, inventory and sales reporting for small shops. In active development, not yet launched.">
+<meta property="og:url" content="https://muyunda161.github.io/projects/zedstack/">
+<meta property="og:image" content="https://muyunda161.github.io/assets/projects/zedstack/sell.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#09090b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/style.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<div class="spotlight" aria-hidden="true"></div>
+<a class="skip" href="#overview">Skip to content</a>
+
+<header>
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a href="../../index.html" class="brand">Muyunda Nalukui</a>
+      <div class="nav-links" id="navLinks">
+        <a href="../../index.html#work">Work</a>
+        <a href="../../index.html#about">About</a>
+        <a href="../../index.html#skills">Skills</a>
+        <a href="../../index.html#journey">Journey</a>
+        <a href="../../index.html#contact">Contact</a>
+        <a class="btn-cv" href="../../assets/Muyunda-Nalukui-CV.pdf" download>CV ↓</a>
+      </div>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">Menu</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="case-hero">
+      <a class="back" href="../../index.html#work">← All work</a>
+      <h1 class="case-title">ZedStack</h1>
+      <p class="case-sub">A multi-tenant business management platform for small and medium-sized businesses in Zambia. In active development.</p>
+      <dl class="meta">
+        <div><dt>Status</dt><dd>In active development, not yet launched</dd></div>
+        <div><dt>First product</dt><dd>SME Operating System: point of sale, inventory, sales reporting</dd></div>
+        <div><dt>Built for</dt><dd>Pharmacies, hardware stores, boutiques and similar shops</dd></div>
+        <!-- Private repo. Edit the email subject or swap in a repo URL if you make it public. -->
+        <div><dt>Code</dt><dd>Private repository. <a href="mailto:muyunda.nalukui@cs.unza.zm?subject=ZedStack%20code%20access">Available on request</a></dd></div>
+      </dl>
+    </div>
+
+    <section class="case-section" id="overview" style="padding-block:60px">
+      <h2>Overview</h2>
+      <div class="prose reveal">
+        <p>ZedStack is a business management platform for small and medium-sized businesses in Zambia, such as pharmacies, hardware stores and boutiques.</p>
+        <p>The first product is an SME Operating System: point of sale, inventory and sales reporting. The long-term plan is a shared platform with more modules, such as agriculture and fleet management, built on the same foundation.</p>
+        <p>It is in active development and has not launched. This page separates what works today from what is planned.</p>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>The problem</h2>
+      <div class="prose reveal">
+        <p>Many small shops track stock and sales in notebooks or spreadsheets. That makes it hard to know what is selling, what is running low and what profit is actually being made.</p>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>What I built</h2>
+      <div class="prose reveal">
+        <p><span class="badge">Working</span> Everything below is built and working today.</p>
+        <ul class="plain">
+          <li><b>Multi-tenant accounts.</b> Each business registers and only ever sees its own data. Every record carries a <code>business_id</code>.</li>
+          <li><b>Secure authentication.</b> Passwords are hashed with bcrypt, and sessions use JWT access tokens.</li>
+          <li><b>Products and inventory.</b> Add products, restock, get low-stock alerts, and see a stock movement history.</li>
+          <li><b>Point of sale.</b> Ring up sales with multiple items and payment methods: cash, MTN Mobile Money, Airtel Money and card. Stock reduces automatically, with row locking and validation to prevent overselling.</li>
+          <li><b>Reports.</b> Revenue, profit (using the cost price recorded at the time of sale), average sale, best-selling products and a payment method breakdown. "Today" is calculated in Zambian time.</li>
+          <li><b>React web app</b> with login, a sell screen, a stock screen and a reports screen.</li>
+          <li><b>Database migrations</b> with Alembic, so tables can change without losing data.</li>
+          <li><b>Containerised local environment</b> with Docker Compose.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>Architecture and key decisions</h2>
+      <div class="prose reveal">
+        <h3>A modular monolith in one monorepo</h3>
+        <p>One backend, one database. Each product (sme, agri, fleet) is meant to be an isolated module, and shared services such as auth, payments, notifications and reporting are meant to be reused across them. Today only the sme module is built.</p>
+        <p>I chose this over microservices to keep it simple and cheap while the product is being validated.</p>
+        <h3>Multi-tenancy by tenant ID on every table</h3>
+        <p>Every table carries a business ID, and every query filters on it. One business can never read another's records.</p>
+        <h3>Money stored as exact decimals</h3>
+        <p>Amounts are never stored as floats, so totals and profit don't pick up rounding errors.</p>
+        <h3>Migrations from the start</h3>
+        <p>I use Alembic migrations instead of letting the app create tables automatically, so the schema can change without losing data.</p>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>Tech stack</h2>
+      <div class="prose reveal">
+        <div class="stack-row"><h3>Frontend</h3><ul class="tags" style="margin-top:8px"><li>React</li><li>TypeScript</li><li>Vite</li></ul></div>
+        <div class="stack-row"><h3>Backend</h3><ul class="tags" style="margin-top:8px"><li>Python</li><li>FastAPI</li><li>SQLAlchemy</li><li>Pydantic</li></ul></div>
+        <div class="stack-row"><h3>Database</h3><ul class="tags" style="margin-top:8px"><li>PostgreSQL</li><li>Alembic</li></ul></div>
+        <div class="stack-row"><h3>Cache and background jobs</h3><ul class="tags" style="margin-top:8px"><li>Redis (provisioned)</li></ul></div>
+        <div class="stack-row"><h3>Infrastructure</h3><ul class="tags" style="margin-top:8px"><li>Docker</li><li>Docker Compose</li><li>GitHub</li></ul></div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>Challenges and what I learned</h2>
+      <div class="prose reveal">
+        <h3>Selling the same stock twice</h3>
+        <p>Two sales at the same time can both see the last item as available. I handled this with row locking and validation when a sale is recorded, so stock can't go negative.</p>
+        <h3>Profit that stays correct</h3>
+        <p>If profit used the current cost price, old sales would change whenever a cost changed. Recording the cost price at the time of sale keeps past profit accurate.</p>
+        <h3>Isolating businesses from each other</h3>
+        <p>With shared tables, one missing tenant filter would expose another business's data. I learned to treat the tenant ID as part of every query, not an extra.</p>
+        <h3>Time zones in reports</h3>
+        <p>"Today's sales" has to mean today in Zambia, not in the server's time zone, so reports calculate the day in Zambian time.</p>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>Status and roadmap</h2>
+      <div class="prose reveal">
+        <p><span class="badge">In active development</span> Not yet launched.</p>
+        <h3>Done</h3>
+        <p>Multi-tenant accounts, authentication, product and inventory management, point of sale, reports, the React app, migrations and the Docker Compose environment.</p>
+        <h3>Planned</h3>
+        <ul class="plain">
+          <li><span class="badge planned">Planned</span> Printable receipts</li>
+          <li><span class="badge planned">Planned</span> Mobile Money payment integration</li>
+          <li><span class="badge planned">Planned</span> Expenses and customer management</li>
+          <li><span class="badge planned">Planned</span> Cloud deployment, so shops can use it on their phones</li>
+          <li><span class="badge planned">Planned</span> Agriculture and fleet modules</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>Screenshots</h2>
+      <div class="gallery reveal">
+        <figure>
+          <img data-shot src="../../assets/projects/zedstack/sell.png" width="1600" height="1000" loading="lazy" decoding="async" alt="ZedStack sell screen with items added to a sale and payment method options">
+          <figcaption>Sell screen</figcaption>
+        </figure>
+        <figure>
+          <img data-shot src="../../assets/projects/zedstack/stock.png" width="1600" height="1000" loading="lazy" decoding="async" alt="ZedStack stock screen listing products with quantities and low-stock alerts">
+          <figcaption>Stock screen</figcaption>
+        </figure>
+        <figure>
+          <img data-shot src="../../assets/projects/zedstack/reports.png" width="1600" height="1000" loading="lazy" decoding="async" alt="ZedStack reports screen showing revenue, profit and best-selling products">
+          <figcaption>Reports screen</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <div class="next">
+      <p class="mono" style="margin-bottom:10px">Previous project</p>
+      <a href="../cake-studio/">← Cake Studio</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> Muyunda Nalukui · Lusaka, Zambia</div>
+</footer>
+<script src="../../assets/main.js" defer></script>
+</body>
+</html>
